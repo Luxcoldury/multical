@@ -1,0 +1,1 @@
+docker build -t multical -f Dockerfile_ros1_18_04 .

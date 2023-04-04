@@ -1,0 +1,51 @@
+# modified from https://github.com/ethz-asl/kalibr/blob/master/Dockerfile_ros1_18_04
+
+FROM osrf/ros:melodic-desktop-full
+
+# use tuna mirror
+RUN rm -r /etc/apt/sources.list.d && \
+	sh -c "echo 'deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic main restricted universe multiverse\n\
+	deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-updates main restricted universe multiverse\n\
+	deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-backports main restricted universe multiverse\n\
+	deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-security main restricted universe multiverse\n\
+	deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-proposed main restricted universe multiverse\n\
+	deb https://mirrors.tuna.tsinghua.edu.cn/ros/ubuntu/ bionic main' > /etc/apt/sources.list"
+
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive \
+	apt-get install -y \
+	git wget autoconf automake nano \
+	python3-dev python-pip python-scipy python-matplotlib \
+	ipython python-wxgtk4.0 python-tk python-igraph python-pyx \
+	libeigen3-dev libboost-all-dev libsuitesparse-dev \
+	doxygen \
+	libopencv-dev \
+	libpoco-dev libtbb-dev libblas-dev liblapack-dev libv4l-dev \
+	python-catkin-tools
+
+RUN python -m pip install -i https://pypi.tuna.tsinghua.edu.cn/simple --upgrade pip
+RUN pip install -i https://pypi.tuna.tsinghua.edu.cn/simple open3d==0.9.0 scikit-image
+
+ENV WORKSPACE /catkin_ws
+
+RUN mkdir -p $WORKSPACE/src && \
+	cd $WORKSPACE && \
+	catkin init && \
+	catkin config --extend /opt/ros/melodic && \
+	catkin config --cmake-args -DCMAKE_BUILD_TYPE=Release
+
+ADD . $WORKSPACE/src/multical
+
+RUN	cd $WORKSPACE &&\
+	catkin build -j$(nproc)
+
+ENTRYPOINT cd $WORKSPACE && \
+	/bin/bash
+
+
+
+
+
+
+
+
+
