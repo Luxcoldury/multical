@@ -66,7 +66,7 @@ def estimate_intersection(line_params1, line_params2):
                   t0[2] * p0[0] - t0[0] * p0[2],
                   t1[1] * p1[2] - t1[2] * p1[1],
                   t1[2] * p1[0] - t1[0] * p1[2]])
-    estimated_intersection = np.linalg.lstsq(a, b, rcond=None)[0]
+    estimated_intersection = np.linalg.lstsq(a, b)[0]
     return estimated_intersection
 
 
