@@ -1,1 +1,1 @@
-docker build -t multical -f Dockerfile_ros1_18_04 .
+docker build -t multical_more_bags -f Dockerfile_ros1_18_04 .
