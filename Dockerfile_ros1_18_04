@@ -4,11 +4,11 @@ FROM osrf/ros:melodic-desktop-full
 
 # use tuna mirror
 RUN rm -r /etc/apt/sources.list.d && \
-	sh -c "echo 'deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic main restricted universe multiverse\n\
-	deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-updates main restricted universe multiverse\n\
-	deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-backports main restricted universe multiverse\n\
-	deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-security main restricted universe multiverse\n\
-	deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-proposed main restricted universe multiverse\n\
+	sh -c "echo 'deb https://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse\n\
+	deb https://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse\n\
+	deb https://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse\n\
+	deb https://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse\n\
+	deb https://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse\n\
 	deb https://mirrors.tuna.tsinghua.edu.cn/ros/ubuntu/ bionic main' > /etc/apt/sources.list"
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive \
@@ -22,8 +22,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive \
 	libpoco-dev libtbb-dev libblas-dev liblapack-dev libv4l-dev \
 	python-catkin-tools
 
-RUN python -m pip install -i https://pypi.tuna.tsinghua.edu.cn/simple --upgrade pip
-RUN pip install -i https://pypi.tuna.tsinghua.edu.cn/simple open3d==0.9.0 scikit-image
+RUN python -m pip install -i https://mirrors.aliyun.com/pypi/simple --upgrade pip
+RUN pip install -i https://mirrors.aliyun.com/pypi/simple open3d==0.9.0 scikit-image
 
 ENV WORKSPACE /catkin_ws
 
