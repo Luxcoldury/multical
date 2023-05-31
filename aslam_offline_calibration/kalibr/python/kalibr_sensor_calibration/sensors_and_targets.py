@@ -132,7 +132,7 @@ class CalibrationTarget(object):
 
 class LiDAR:
     def __init__(self, config, parsed, targets, distanceSigma=2e-2):
-        self.dataset = initLiDARBagDataset(parsed.bagfile[0], config.getRosTopic(),
+        self.dataset = initLiDARBagDataset(config.getRosBag(), config.getRosTopic(),
                                            relative_timestamp=config.getRelativePointTimestamp(),
                                            from_to=parsed.bag_from_to)
         self.planes = targets
@@ -649,7 +649,7 @@ class CameraChain():
         self.camList = []
         for camNr in range(0, chainConfig.numCameras()):
             camConfig = chainConfig.getCameraParameters(camNr)
-            dataset = initCameraBagDataset(parsed.bagfile[0], camConfig.getRosTopic(), \
+            dataset = initCameraBagDataset(camConfig.getRosBag(), camConfig.getRosTopic(), \
                                            parsed.bag_from_to, parsed.perform_synchronization)
 
             # create the camera
@@ -1040,7 +1040,7 @@ class Imu(object):
         self.imuConfig = imuConfig
 
         # load dataset
-        self.dataset = initImuBagDataset(parsed.bagfile[0], imuConfig.getRosTopic(), \
+        self.dataset = initImuBagDataset(imuConfig.getRosBag(), imuConfig.getRosTopic(), \
                                          parsed.bag_from_to, parsed.perform_synchronization)
 
         # statistics

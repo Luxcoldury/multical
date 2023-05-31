@@ -243,6 +243,20 @@ class SensorParametersBase(ParametersBase):
         self.extrinsics_field_name = "T_here_{0}".format(reference_sensor_name)
         self.timeshift_field_name = "timeshift_to_{0}".format(reference_sensor_name)
 
+    # rosbag
+    def checkRosBag(self, bag):
+        if not isinstance(bag, str):
+            self.raiseError("rosbag has to be a string")
+
+    @catch_keyerror
+    def getRosBag(self):
+        self.checkRosBag(self.data["rosbag"])
+        return self.data["rosbag"]
+
+    def setRosBag(self, bag):
+        self.checkRosBag(bag)
+        self.data["rosbag"] = bag
+
     # rostopic
     def checkRosTopic(self, topic):
         if not isinstance(topic, str):
