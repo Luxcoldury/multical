@@ -329,6 +329,10 @@ namespace aslam {
                 {
                     outObservation.erase(outObservation.begin() + i);
                 }
+                else if(i==1|i==2|i==7|i==8)
+                {
+                    outObservation.erase(outObservation.begin() + i);
+                }
                 else
                 {
                     i++;
