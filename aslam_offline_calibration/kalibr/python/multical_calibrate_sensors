@@ -184,6 +184,10 @@ def parseArgs():
 
     return parsed
 
+def lidar_para(LiDARConfig,idx,parsed,targets,iCal):
+    config = LiDARConfig.getLiDARParameters(idx)
+    lidar = sens.LiDAR(config, parsed, targets)
+    iCal.registerLiDAR(lidar)
 
 def main():
     # Parse the arguments
@@ -260,10 +264,11 @@ def main():
     if parsed.lidar_yaml:
         LiDARConfig = kc.LiDARListParameters(parsed.lidar_yaml,
                                              reference_sensor_name)
-        for idx in range(0, LiDARConfig.numLiDARs()):
-            config = LiDARConfig.getLiDARParameters(idx)
-            lidar = sens.LiDAR(config, parsed, targets)
-            iCal.registerLiDAR(lidar)
+        map(lidar_para,[(LiDARConfig,idx,parsed,targets,iCal) for idx in range(0, LiDARConfig.numLiDARs())])
+        # for idx in range(0, LiDARConfig.numLiDARs()):
+        #     config = LiDARConfig.getLiDARParameters(idx)
+        #     lidar = sens.LiDAR(config, parsed, targets)
+        #     iCal.registerLiDAR(lidar)
 
         has_lidar = True
 
