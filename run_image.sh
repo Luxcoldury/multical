@@ -3,4 +3,4 @@ FOLDER=$HOME/multical_calibration_example_data
 xhost +local:root
 docker run -it -e "DISPLAY" -e "QT_X11_NO_MITSHM=1" \
     -v "/tmp/.X11-unix:/tmp/.X11-unix:rw" \
-    -v "$FOLDER:/data" multical_more_bags
+    -v "$FOLDER:/data" multical_para_lidar_load
