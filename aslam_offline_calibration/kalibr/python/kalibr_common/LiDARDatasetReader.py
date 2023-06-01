@@ -8,12 +8,15 @@ class LiDARDataParser:
     def __init__(self, relative_timestamp):
         self.relative_timestamp = relative_timestamp
         self.field_indices = None
+        self.field_indices = [0,1,2,3]
 
     def parseData(self, data):
         if not self.field_indices:
             self.field_indices = self.findFieldIndices(data.fields)
         points = np.array(point_cloud2.read_points_list(data, skip_nans=True))
         points = points[:, self.field_indices]
+
+        points = np.insert(points,3,np.ones(points.shape[0]),axis=1)
 
         if self.relative_timestamp:
             points[:, 3] += data.header.stamp.to_sec()
