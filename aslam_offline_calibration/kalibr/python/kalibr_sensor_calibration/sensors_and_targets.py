@@ -803,7 +803,8 @@ class CameraChain():
         T_t_w_Dv = []
         for i in range(len(targets)):
             if initialGuess[i] is None:
-                raise RuntimeError("Target {0} is not observed simultaneously with other target!".format(i))
+                # raise RuntimeError("Target {0} is not observed simultaneously with other target!".format(i))
+                initialGuess[i] = sm.Transformation()
             isActive = i is not 0
             T_t_w_Dv.append(aopt.TransformationDv(initialGuess[i], rotationActive=isActive, translationActive=isActive))
             for j in range(0, T_t_w_Dv[i].numDesignVariables()):
@@ -812,6 +813,13 @@ class CameraChain():
         for key, transformations in targetTransformations.items():
             T_ti_tj_pre = T_t_w_Dv[key[0]].toExpression() * \
                           T_t_w_Dv[key[1]].toExpression().inverse()
+            for transformation in transformations:
+                error = aopt.ErrorTermTransformation(T_ti_tj_pre, transformation, 1.0, 0.1)
+                problem.addErrorTerm(error)
+
+        for i in [1,2,7,8]:
+            T_ti_tj_pre = T_t_w_Dv[0].toExpression() * \
+                          T_t_w_Dv[i].toExpression().inverse()
             for transformation in transformations:
                 error = aopt.ErrorTermTransformation(T_ti_tj_pre, transformation, 1.0, 0.1)
                 problem.addErrorTerm(error)
