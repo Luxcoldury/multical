@@ -820,9 +820,13 @@ class CameraChain():
         for i in [1,2,7,8]:
             T_ti_tj_pre = T_t_w_Dv[0].toExpression() * \
                           T_t_w_Dv[i].toExpression().inverse()
-            for transformation in transformations:
-                error = aopt.ErrorTermTransformation(T_ti_tj_pre, transformation, 1.0, 0.1)
-                problem.addErrorTerm(error)
+            T_ti_tj_mea = T_ti_tj_pre
+            key = (0, i)
+            targetTransformations[key] = []
+            targetTransformations[key].append(T_ti_tj_mea)
+
+            error = aopt.ErrorTermTransformation(T_ti_tj_pre, targetTransformations[key][0], 1.0, 0.1)
+            problem.addErrorTerm(error)
 
         # define the optimization
         options = aopt.Optimizer2Options()
