@@ -798,6 +798,8 @@ class CameraChain():
                     key = (idx, neighbour)
                     initialGuess[neighbour] = targetTransformations[key][0].inverse() * initialGuess[idx]
 
+        print initialGuess
+
         # build the problem
         problem = aopt.OptimizationProblem()
         T_t_w_Dv = []
@@ -819,7 +821,7 @@ class CameraChain():
 
         for i in [1,2,7,8]:
             T_ti_tj_pre = T_t_w_Dv[0].toExpression() * \
-                          T_t_w_Dv[i].toExpression().inverse()
+                          T_t_w_Dv[0].toExpression().inverse()
             key = (0, i)
             targetTransformations[key] = []
             targetTransformations[key].append(sm.Transformation())

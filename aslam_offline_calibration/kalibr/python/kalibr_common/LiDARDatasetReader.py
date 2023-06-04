@@ -16,10 +16,10 @@ class LiDARDataParser:
         points = np.array(point_cloud2.read_points_list(data, skip_nans=True))
         points = points[:, self.field_indices]
 
-        points = np.insert(points,3,np.ones(points.shape[0]),axis=1)
+        points = np.insert(points,3,np.zeros(points.shape[1]),axis=1)
 
         if self.relative_timestamp:
-            points[:, 3] += data.header.stamp.to_sec()
+            points[:, 3] = data.header.stamp.to_sec()
 
         return points
 
