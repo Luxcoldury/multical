@@ -38,9 +38,6 @@ ADD . $WORKSPACE/src/multical
 RUN	cd $WORKSPACE &&\
 	catkin build -j$(nproc)
 
-ENTRYPOINT cd $WORKSPACE && \
-	/bin/bash
-
 
 
 
