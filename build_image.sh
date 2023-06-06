@@ -1,1 +1,1 @@
-docker build -t multical_ignore_boards_with_web -f Dockerfile_ros1_18_04 .
+docker build --no-cache -t multical_ignore_boards_with_web -f Dockerfile_ros1_18_04 .

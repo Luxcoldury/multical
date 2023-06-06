@@ -38,7 +38,19 @@ ADD . $WORKSPACE/src/multical
 RUN	cd $WORKSPACE &&\
 	catkin build -j$(nproc)
 
-RUN apt install python3.8 python3.8-venv
+RUN apt install -y build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev wget libbz2-dev
+
+RUN cd / && \
+	wget https://registry.npmmirror.com/-/binary/python/3.8.10/Python-3.8.10.tar.xz && \
+	tar -xvf Python-3.8.10.tar.xz && \
+	cd Python-3.8.10 && \ 
+	./configure --enable-optimizations --with-ssl --prefix=/usr/local/python3.8.10 && \
+	make && \
+	make install && \
+	ln -s /usr/local/python3.8.10/bin/python3.8 /usr/bin/python3.8 && \
+	ln -s /usr/local/python3.8.10/bin/pip3.8 /usr/bin/pip3.8
+
+RUN python3.8 -m venv /multical-web-env
 
 RUN cd / \
 	git clone https://github.com/Luxcoldury/multical-web.git \
