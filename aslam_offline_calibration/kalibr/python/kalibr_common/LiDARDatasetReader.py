@@ -8,7 +8,6 @@ class LiDARDataParser:
     def __init__(self, relative_timestamp):
         self.relative_timestamp = relative_timestamp
         self.field_indices = None
-        self.field_indices = [0,1,2,3]
 
     def parseData(self, data):
         if not self.field_indices:
