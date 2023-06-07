@@ -59,4 +59,6 @@ RUN bash -c "cd /multical-web && source /multical-web-env/bin/activate && pip in
 
 RUN	chmod +x /multical-web/docker_entrypoint.sh
 
-CMD ["/bin/bash", "/multical-web/docker_entrypoint.sh"]
+ENTRYPOINT ["/multical-web/docker_entrypoint.sh"]
+
+CMD ["multical-web"]

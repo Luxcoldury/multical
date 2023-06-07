@@ -799,6 +799,7 @@ class CameraChain():
                     initialGuess[neighbour] = targetTransformations[key][0].inverse() * initialGuess[idx]
 
         print initialGuess
+        lonely_targets = []
 
         # build the problem
         problem = aopt.OptimizationProblem()
@@ -806,7 +807,15 @@ class CameraChain():
         for i in range(len(targets)):
             if initialGuess[i] is None:
                 # raise RuntimeError("Target {0} is not observed simultaneously with other target!".format(i))
+
+                # Deal with lonely targets
+                lonely_targets.append(i)
                 initialGuess[i] = sm.Transformation()
+                for cam in self.camList:
+                    for observation in cam.targetObservations:
+                        observation = filter(lambda observedTarget: observedTarget.targetID()!=i, observation)
+                # Deal with lonely targets
+
             isActive = i is not 0
             T_t_w_Dv.append(aopt.TransformationDv(initialGuess[i], rotationActive=isActive, translationActive=isActive))
             for j in range(0, T_t_w_Dv[i].numDesignVariables()):
@@ -819,15 +828,15 @@ class CameraChain():
                 error = aopt.ErrorTermTransformation(T_ti_tj_pre, transformation, 1.0, 0.1)
                 problem.addErrorTerm(error)
 
-        for i in [1,2,7,8]:
-            T_ti_tj_pre = T_t_w_Dv[0].toExpression() * \
-                          T_t_w_Dv[0].toExpression().inverse()
-            key = (0, i)
-            targetTransformations[key] = []
-            targetTransformations[key].append(sm.Transformation())
+        # for i in lonely_targets:
+        #     T_ti_tj_pre = T_t_w_Dv[0].toExpression() * \
+        #                   T_t_w_Dv[i].toExpression().inverse()
+        #     key = (0, i)
+        #     targetTransformations[key] = []
+        #     targetTransformations[key].append(sm.Transformation())
 
-            error = aopt.ErrorTermTransformation(T_ti_tj_pre, targetTransformations[key][0], 1.0, 0.1)
-            problem.addErrorTerm(error)
+        #     error = aopt.ErrorTermTransformation(T_ti_tj_pre, targetTransformations[key][0], 1.0, 0.1)
+        #     problem.addErrorTerm(error)
 
         # define the optimization
         options = aopt.Optimizer2Options()
