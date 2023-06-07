@@ -813,7 +813,7 @@ class CameraChain():
                 initialGuess[i] = sm.Transformation()
                 for cam in self.camList:
                     for observation in cam.targetObservations:
-                        observation = filter(lambda observedTarget: observedTarget.targetID()!=i, observation)
+                        observation = filter(lambda observedTarget: observedTarget.targetId()!=i, observation)
                 # Deal with lonely targets
 
             isActive = i is not 0
