@@ -113,6 +113,7 @@ class CalibrationTarget(object):
         max = np.max(targetPoints, axis=0).reshape((3, 1))
         self.range = (min, max)
         self.setInitialGuess(initExtrinsic)
+        self.lonely = False
 
     def setInitialGuess(self, initExtrinsic):
         self.initExtrinsic = initExtrinsic
@@ -121,6 +122,7 @@ class CalibrationTarget(object):
         return self.T_p_w_Dv.toTransformationMatrix()
 
     def addDesignVariables(self, problem, fixed=False):
+        fixed = fixed or self.lonely
         self.C_t_w_Dv = aopt.RotationQuaternionDv(self.initExtrinsic.q())
         self.C_t_w_Dv.setActive(not fixed)
         problem.addDesignVariable(self.C_t_w_Dv, ic.HELPER_GROUP_ID)
@@ -799,7 +801,6 @@ class CameraChain():
                     initialGuess[neighbour] = targetTransformations[key][0].inverse() * initialGuess[idx]
 
         print initialGuess
-        lonely_targets = []
 
         # build the problem
         problem = aopt.OptimizationProblem()
@@ -809,14 +810,14 @@ class CameraChain():
                 # raise RuntimeError("Target {0} is not observed simultaneously with other target!".format(i))
 
                 # Deal with lonely targets
-                lonely_targets.append(i)
+                targets[i].lonely = True
                 initialGuess[i] = sm.Transformation()
                 for cam in self.camList:
                     for observation in cam.targetObservations:
                         observation = filter(lambda observedTarget: observedTarget.targetId()!=i, observation)
                 # Deal with lonely targets
 
-            isActive = i is not 0
+            isActive = (i is not 0) and (not targets[i].lonely)
             T_t_w_Dv.append(aopt.TransformationDv(initialGuess[i], rotationActive=isActive, translationActive=isActive))
             for j in range(0, T_t_w_Dv[i].numDesignVariables()):
                 problem.addDesignVariable(T_t_w_Dv[i].getDesignVariable(j))
